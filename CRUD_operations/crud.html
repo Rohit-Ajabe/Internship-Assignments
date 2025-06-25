@@ -1,1 +1,69 @@
 
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>CRUD App</title>
+  <style>
+    table, th, td { border: 1px solid black; border-collapse: collapse; padding: 8px; }
+  </style>
+</head>
+<body>
+
+  <h2>CRUD Application</h2>
+
+  <input type="text" id="name" placeholder="Enter name">
+  <button onclick="create()">Create</button>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody id="data"></tbody>
+  </table>
+
+  <script>
+    let items = [];
+
+    function create() {
+      const name = document.getElementById("name").value;
+      if (name) {
+        items.push(name);
+        document.getElementById("name").value = "";
+        read();
+      }
+    }
+
+    function read() {
+      const tbody = document.getElementById("data");
+      tbody.innerHTML = "";
+      items.forEach((item, index) => {
+        tbody.innerHTML += `
+          <tr>
+            <td><input value="${item}" onchange="update(${index}, this.value)"></td>
+            <td>
+              <button onclick="deleteItem(${index})">Delete</button>
+            </td>
+          </tr>
+        `;
+      });
+    }
+
+    function update(index, value) {
+      items[index] = value;
+      read();
+    }
+
+    function deleteItem(index) {
+      items.splice(index, 1);
+      read();
+    }
+
+    read(); // Initial display
+  </script>
+
+</body>
+</html>
