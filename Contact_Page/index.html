@@ -1,1 +1,181 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>My Contacts</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    #home {
+      background: url('https://eda.europa.eu/images/default-source/images/cyber.jpg') no-repeat center center;
+      background-size: cover;
+      height: 80vh;
+      border-radius: 10px;
+  
+      display: flex;               /* Enable flex */
+      justify-content: center;     /* Center horizontally */
+      align-items: center;         /* Center vertically */
+      flex-direction: column;      /* Stack text vertically */
+  
+      color: white;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+      text-align: center;          /* Center text alignment */
+    }
+  </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#" onclick="showSection('home')">My Contact</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item"><a class="nav-link" href="#" onclick="showSection('addContact')">Add Contact</a></li>
+        <li class="nav-item"><a class="nav-link" href="#" onclick="showSection('viewContact')">View Contact</a></li>
+        <li class="nav-item"><a class="nav-link" href="#" onclick="showSection('editContact')">Edit Contact</a></li>
+      </ul>
+      <button class="btn btn-outline-success me-2" onclick="showSection('login')">Login</button>
+      <button class="btn btn-outline-success" onclick="showSection('register')">Signup</button>
+    </div>
+  </div>
+</nav>
+
+<!-- Page Content -->
+<div class="container my-5">
+
+  <!-- Home -->
+  <div id="home" class="page-section">
+    <h2 class="text-center">Welcome to My Contacts</h2>
+    <p class="text-center">manage your contacts here </p>
+  </div>
+
+  <!-- Add Contact -->
+  <div id="addContact" class="page-section" style="display:none;">
+    <h2 class="text-center mb-4">Add Contact</h2>
+    <form id="addContactForm" onsubmit="addContact(event)">
+      <input id="addName" class="form-control mb-3" placeholder="Enter Name" required>
+      <input id="addNumber" type="tel" class="form-control mb-3" placeholder="Enter Number" required>
+      <input id="addEmail" type="email" class="form-control mb-3" placeholder="Enter Email" required>
+      <input id="addAddress" class="form-control mb-3" placeholder="Enter Address" required>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+  </div>
+
+  <!-- View Contact -->
+  <div id="viewContact" class="page-section" style="display:none;">
+    <h2 class="text-center mb-4">View Contacts</h2>
+    <div id="contactList"></div>
+  </div>
+
+  <!-- Edit Contact -->
+  <div id="editContact" class="page-section" style="display:none;">
+    <h2 class="text-center mb-4">Edit Contact</h2>
+    <form id="editContactForm" onsubmit="editContact(event)">
+      <input id="editName" class="form-control mb-3" placeholder="Enter Name" required>
+      <input id="editNumber" type="tel" class="form-control mb-3" placeholder="Enter Number" required>
+      <input id="editEmail" type="email" class="form-control mb-3" placeholder="Enter Email" required>
+      <input id="editAddress" class="form-control mb-3" placeholder="Enter Address" required>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+  </div>
+
+  <!-- Login -->
+  <div id="login" class="page-section" style="display:none;">
+    <h2 class="text-center mb-4">Login Here</h2>
+    <form onsubmit="event.preventDefault(); alert('Login Successful!');">
+      <input type="email" class="form-control mb-3" placeholder="Enter Email" required>
+      <input type="password" class="form-control mb-3" placeholder="Enter Password" required>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+  </div>
+
+  <!-- Register -->
+  <div id="register" class="page-section" style="display:none;">
+    <h2 class="text-center mb-4">Register Here</h2>
+    <form onsubmit="event.preventDefault(); alert('Registered Successfully!');">
+      <input class="form-control mb-3" placeholder="Enter Name" required>
+      <input type="tel" class="form-control mb-3" placeholder="Enter Number" required>
+      <input type="email" class="form-control mb-3" placeholder="Enter Email" required>
+      <input type="password" class="form-control mb-3" placeholder="Enter Password" required>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+  </div>
+
+</div>
+
+<!-- Footer -->
+<footer class="bg-dark text-white text-center py-3">
+  &copy; Developed By Manu
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+  // Simple contact list for demo
+  let contacts = [];
+
+  function showSection(sectionId) {
+    // Hide all sections
+    document.querySelectorAll('.page-section').forEach(sec => sec.style.display = 'none');
+    // Show selected
+    document.getElementById(sectionId).style.display = 'block';
+    // Render contacts if needed
+    if (sectionId === 'viewContact') renderContacts();
+  }
+
+  function addContact(event) {
+    event.preventDefault();
+    const name = document.getElementById('addName').value;
+    const number = document.getElementById('addNumber').value;
+    const email = document.getElementById('addEmail').value;
+    const address = document.getElementById('addAddress').value;
+
+    contacts.push({ name, number, email, address });
+    alert('Contact Added!');
+    document.getElementById('addContactForm').reset();
+    showSection('viewContact');
+  }
+
+  function renderContacts() {
+    const list = document.getElementById('contactList');
+    list.innerHTML = contacts.length ? contacts.map(c => `
+      <div class="card mb-3">
+        <div class="card-body">
+          <h5>${c.name}</h5>
+          <p>Number: ${c.number}</p>
+          <p>Email: ${c.email}</p>
+          <p>Address: ${c.address}</p>
+        </div>
+      </div>
+    `).join('') : '<p>No contacts added yet.</p>';
+  }
+
+  function editContact(event) {
+    event.preventDefault();
+    if (contacts.length === 0) {
+      alert('No contacts to edit.');
+      return;
+    }
+    const name = document.getElementById('editName').value;
+    const number = document.getElementById('editNumber').value;
+    const email = document.getElementById('editEmail').value;
+    const address = document.getElementById('editAddress').value;
+
+    contacts[0] = { name, number, email, address }; // Edit first for demo
+    alert('Contact Edited!');
+    document.getElementById('editContactForm').reset();
+    showSection('viewContact');
+  }
+
+  // Show home on load
+  showSection('home');
+</script>
+
+</body>
+</html>
+
